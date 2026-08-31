@@ -1,0 +1,305 @@
+/* =========================================
+   ETF Dashboard - GitHub Style
+   ========================================= */
+/* =========================================
+   기본
+   ========================================= */
+* {
+    box-sizing: border-box;
+}
+html {
+    font-size: 14px;
+}
+body {
+    margin: 0;
+    padding: 32px;
+    background: #f6f8fa;
+    color: #1f2328;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Helvetica,
+        Arial,
+        sans-serif;
+    line-height: 1.5;
+}
+/* =========================================
+   전체 컨텐츠 폭
+   ========================================= */
+body > * {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* =========================================
+   제목
+   ========================================= */
+h1 {
+    margin: 0 0 16px 0;
+    padding: 20px 24px;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    color: #1f2328;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+/* =========================================
+   Navigation
+   ========================================= */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 16px;
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+nav a {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #1f2328;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+}
+nav a:hover {
+    background: #f3f4f6;
+    text-decoration: none;
+}
+nav a.active {
+    background: #f6f8fa;
+    font-weight: 600;
+}
+/* =========================================
+   Card
+   ========================================= */
+.card {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+/* =========================================
+   Table
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    overflow: hidden;
+}
+/* =========================================
+   Table Header
+   ========================================= */
+thead {
+    background: #f6f8fa;
+}
+th {
+    padding: 10px 12px;
+    background: #f6f8fa;
+    border-bottom: 1px solid #d0d7de;
+    color: #656d76;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+/* 첫 번째 컬럼 */
+th:first-child {
+    text-align: left;
+}
+/* 숫자 컬럼 헤더 */
+th:nth-child(n+3) {
+    text-align: right;
+}
+/* =========================================
+   Table Body
+   ========================================= */
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #d8dee4;
+    color: #1f2328;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
+tbody tr:hover {
+    background: #f6f8fa;
+}
+/* =========================================
+   종목코드
+   ========================================= */
+td.code {
+    text-align: left;
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+/* =========================================
+   종목명
+   ========================================= */
+td.name {
+    text-align: left;
+    min-width: 190px;
+}
+td.name a {
+    color: #0969da;
+    font-weight: 600;
+    text-decoration: none;
+}
+td.name a:hover {
+    color: #0550ae;
+    text-decoration: underline;
+}
+/* =========================================
+   숫자
+   ========================================= */
+td.number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    white-space: nowrap;
+}
+/* =========================================
+   일반 문자
+   ========================================= */
+td.text {
+    text-align: left;
+}
+/* =========================================
+   숫자 정렬 및 폭
+   ========================================= */
+td.number,
+td.code {
+    font-variant-numeric: tabular-nums;
+}
+/* =========================================
+   링크
+   ========================================= */
+a {
+    color: #0969da;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+/* =========================================
+   GitHub Style Button
+   ========================================= */
+.button {
+    display: inline-block;
+    padding: 5px 16px;
+    background: #f6f8fa;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    color: #1f2328;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow:
+        0 1px 0 rgba(31, 35, 40, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.button:hover {
+    background: #f3f4f6;
+    text-decoration: none;
+}
+.button:active {
+    background: #ebecf0;
+    box-shadow:
+        inset 0 1px 0 rgba(31, 35, 40, 0.1);
+}
+/* =========================================
+   Empty / Error
+   ========================================= */
+.empty {
+    padding: 32px;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    color: #656d76;
+    text-align: center;
+}
+/* =========================================
+   모바일
+   ========================================= */
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+        font-size: 13px;
+    }
+    h1 {
+        padding: 16px;
+        font-size: 20px;
+    }
+    nav {
+        margin-bottom: 12px;
+        padding: 6px;
+    }
+    nav a {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    /* 테이블은 화면보다 넓어질 수 있으므로
+       가로 스크롤 */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    th,
+    td {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    td.name {
+        min-width: 170px;
+    }
+}
+/* =========================================
+   작은 모바일
+   ========================================= */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+    h1 {
+        margin-bottom: 10px;
+        padding: 12px 14px;
+        font-size: 18px;
+    }
+    nav {
+        margin-bottom: 10px;
+    }
+    th,
+    td {
+        padding: 7px 9px;
+    }
+}
