@@ -1,5 +1,5 @@
 async function loadWatchlist() {
-    const watchlistText = await fetch("/data/watchlist.txt").then(response => response.text());
+    const watchlistText = await fetch("./data/watchlist.txt").then(response => response.text());
     const watchlist = new Set(
         watchlistText
             .split(/\r?\n/)
@@ -7,7 +7,7 @@ async function loadWatchlist() {
             .filter(code => code.length > 0)
     );
 
-    const csvText = await fetch("/data/etf.csv").then(response => response.text());
+    const csvText = await fetch("./data/etf.csv").then(response => response.text());
     const rows = csvText
         .trim()
         .split(/\r?\n/)

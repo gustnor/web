@@ -1,5 +1,5 @@
 async function loadETF() {
-    const response = await fetch("/data/etf.csv");
+    const response = await fetch("./data/etf.csv");
     const text = await response.text();
     const rows = text
         .trim()
