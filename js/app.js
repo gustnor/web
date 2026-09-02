@@ -1,6 +1,7 @@
 const pages = [
   { id: "all", label: "전체 ETF", html: "html/all.html", script: "js/all.js" },
-  { id: "watchlist", label: "관심 ETF", html: "html/watchlist.html", script: "js/watchlist.js" }
+  { id: "watchlist", label: "관심 ETF", html: "html/watchlist.html", script: "js/watchlist.js" },
+  { id: "etf2", label: "ETF2", html: "html/etf2.html", script: "js/etf2.js" }
 ];
 
 const nav = document.getElementById("nav");
