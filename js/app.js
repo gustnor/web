@@ -50,5 +50,36 @@ async function loadPage(pageId) {
   document.body.appendChild(script);
 }
 
-const initialPage = new URLSearchParams(window.location.search).get("page") || "all";
-loadPage(initialPage);
+async function discoverWatchlistPages() {
+  for (let index = 1; index <= 99; index++) {
+    const suffix = String(index).padStart(2, "0");
+    const candidates = [
+      `./data/watchlist${suffix}.csv`,
+      `./data/etf_watchlist${suffix}.csv`
+    ];
+
+    for (const csv of candidates) {
+      const response = await fetch(csv, { method: "HEAD" });
+      if (!response.ok) {
+        continue;
+      }
+
+      pages.push({
+        id: `watchlist-csv-${suffix}`,
+        label: `관심 ETF ${suffix}`,
+        html: "html/watchlist-csv.html",
+        script: "js/watchlist-csv.js",
+        csv
+      });
+      break;
+    }
+  }
+}
+
+async function initialize() {
+  await discoverWatchlistPages();
+  const initialPage = new URLSearchParams(window.location.search).get("page") || "all";
+  loadPage(initialPage);
+}
+
+initialize();

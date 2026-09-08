@@ -63,12 +63,7 @@ function render() {
     html += "<tr>";
 
     row.forEach((col, colIdx) => {
-      let css = "";
-      if (!isNaN(col)) css = "num";
-
-      if (headers[colIdx].includes("등락률")) {
-        css = parseFloat(col) >= 0 ? "up" : "down";
-      }
+      let css = isNumberColumn(headers[colIdx]) ? "number" : "text";
 
       if (headers[colIdx] === "종목명") {
         html += `
@@ -77,7 +72,7 @@ function render() {
           </td>
         `;
       } else {
-        html += `<td class="${css}">${format(col)}</td>`;
+        html += `<td class="${css}">${formatValue(headers[colIdx], col)}</td>`;
       }
     });
 
@@ -91,9 +86,49 @@ function render() {
   document.getElementById("pageInfo").innerHTML = `${page} / ${maxPage}`;
 }
 
-function format(v) {
-  if (v === "" || isNaN(v)) return v;
-  return Number(v).toLocaleString();
+function isNumberColumn(header) {
+  return [
+    "현재가",
+    "NAV",
+    "3개월수익률",
+    "거래량",
+    "거래대금",
+    "시가총액(억)",
+    "등락률",
+    "배당수익률",
+    "총보수"
+  ].includes(header.replace(/^\uFEFF/, "").trim());
+}
+
+function formatValue(header, value) {
+  if (value === undefined || value === null || value.trim() === "") {
+    return "";
+  }
+
+  const number = Number(value);
+  if (Number.isNaN(number)) {
+    return value;
+  }
+
+  if (header === "시가총액(억)") {
+    const jo = Math.floor(number / 10000);
+    const eok = number % 10000;
+    if (jo > 0 && eok > 0) return `${jo}조 ${eok.toLocaleString("ko-KR")}억`;
+    if (jo > 0) return `${jo}조`;
+    return `${number.toLocaleString("ko-KR")}억`;
+  }
+
+  if (["3개월수익률", "등락률", "배당수익률", "총보수"].includes(header)) {
+    return `${number.toLocaleString("ko-KR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}%`;
+  }
+
+  return number.toLocaleString("ko-KR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
 }
 
 function filterData() {
@@ -112,7 +147,8 @@ function sortTable(idx) {
     asc = true;
   }
 
-  filtered.sort((a, b) => compareRows(a, b, idx));
+  filtered = [...filtered].sort((a, b) => compareRows(a, b, idx));
+  page = 1;
   render();
 }
 
