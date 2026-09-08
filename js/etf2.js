@@ -1,14 +1,13 @@
-let headers = [];
-let data = [];
-let filtered = [];
+var headers = [];
+var data = [];
+var filtered = [];
 
-let page = 1;
-let pageSize = 50;
+var page = 1;
+var pageSize = 50;
 
-let sortColumn = -1;
-let asc = true;
+var sortColumn = -1;
+var asc = true;
 
-document.getElementById("search").addEventListener("input", filterData);
 document.getElementById("popupClose").onclick = () => {
   document.getElementById("popup").style.display = "none";
 };
@@ -21,7 +20,7 @@ async function loadDefaultCsv() {
     const text = await response.text();
     parseCsv(text);
   } catch (err) {
-    document.getElementById("stats").innerHTML = "data/etf2.csv 파일을 찾을 수 없습니다.";
+    document.getElementById("tableArea").innerHTML = "data/etf2.csv 파일을 찾을 수 없습니다.";
     console.error(err);
   }
 }
@@ -42,8 +41,6 @@ function parseCsv(csv) {
 
 function render() {
   const displayData = [...filtered];
-
-  document.getElementById("stats").innerHTML = `Rows : ${displayData.length}`;
 
   let html = "<table>";
   html += "<thead><tr>";
@@ -82,8 +79,6 @@ function render() {
   html += "</tbody></table>";
   document.getElementById("tableArea").innerHTML = html;
 
-  const maxPage = Math.max(1, Math.ceil(displayData.length / pageSize));
-  document.getElementById("pageInfo").innerHTML = `${page} / ${maxPage}`;
 }
 
 function isNumberColumn(header) {

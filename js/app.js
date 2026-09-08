@@ -33,7 +33,11 @@ function setPageParam(pageId) {
 
 async function loadPage(pageId) {
   const page = pages.find(item => item.id === pageId) || pages[0];
-  const html = await fetch(page.html).then(response => response.text());
+  const response = await fetch(page.html);
+  if (!response.ok) {
+    throw new Error(`${page.html} 요청 실패 (${response.status})`);
+  }
+  const html = await response.text();
 
   app.innerHTML = html;
   renderNav(page.id);
@@ -46,40 +50,57 @@ async function loadPage(pageId) {
 
   const script = document.createElement("script");
   script.src = page.script;
+  if (page.csv) {
+    script.dataset.csv = page.csv;
+  }
   script.dataset.pageScript = "true";
   document.body.appendChild(script);
 }
 
 async function discoverWatchlistPages() {
-  for (let index = 1; index <= 99; index++) {
-    const suffix = String(index).padStart(2, "0");
-    const candidates = [
-      `./data/watchlist${suffix}.csv`,
-      `./data/etf_watchlist${suffix}.csv`
-    ];
+  try {
+    const response = await fetch("./data/watchlists.json");
+    if (!response.ok) {
+      return;
+    }
 
-    for (const csv of candidates) {
-      const response = await fetch(csv, { method: "HEAD" });
-      if (!response.ok) {
-        continue;
+    const files = await response.json();
+    files.forEach(file => {
+      const match = file.match(/^etf_watchlist(\d+)\.csv$/);
+      if (!match) {
+        return;
       }
 
-      pages.push({
-        id: `watchlist-csv-${suffix}`,
-        label: `관심 ETF ${suffix}`,
-        html: "html/watchlist-csv.html",
-        script: "js/watchlist-csv.js",
-        csv
-      });
-      break;
-    }
+      const suffix = match[1];
+      const csv = `./data/${file}`;
+    pages.push({
+      id: `watchlist-csv-${suffix}`,
+      label: `관심 ETF ${suffix}`,
+      html: "html/watchlist-csv.html",
+      script: "js/watchlist-csv.js",
+      csv
+    });
+    });
+  } catch (error) {
+    console.error("watchlist 목록 확인 실패", error);
   }
 }
 
 async function initialize() {
-  await discoverWatchlistPages();
   const initialPage = new URLSearchParams(window.location.search).get("page") || "all";
-  loadPage(initialPage);
+  const isWatchlistPage = initialPage.startsWith("watchlist-csv-");
+
+  if (!isWatchlistPage) {
+    loadPage(initialPage);
+  }
+
+  await discoverWatchlistPages();
+
+  if (isWatchlistPage) {
+    loadPage(initialPage);
+  } else {
+    renderNav(initialPage);
+  }
 }
 
 initialize();

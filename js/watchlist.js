@@ -49,9 +49,7 @@ async function loadWatchlist() {
             if (header === "종목명") {
                 html += `
                     <td class="name">
-                        <a href="detail.html?code=${code}">
-                            ${value}
-                        </a>
+                        ${value}
                     </td>
                 `;
                 return;

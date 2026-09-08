@@ -1,16 +1,15 @@
-let headers = [];
-let data = [];
-let filtered = [];
+var headers = [];
+var data = [];
+var filtered = [];
 
-let page = 1;
-let pageSize = 50;
+var page = 1;
+var pageSize = 50;
 
-let sortColumn = -1;
-let asc = true;
+var sortColumn = -1;
+var asc = true;
 
-const csvPath = document.currentScript.dataset.csv;
+var csvPath = document.currentScript.dataset.csv;
 
-document.getElementById("search").addEventListener("input", filterData);
 document.getElementById("popupClose").onclick = () => {
     document.getElementById("popup").style.display = "none";
 };
@@ -32,8 +31,6 @@ function parseCsv(csv) {
 
 function render() {
     const displayData = [...filtered];
-    document.getElementById("stats").innerHTML = `Rows : ${displayData.length}`;
-
     let html = "<table><thead><tr>";
     headers.forEach((header, index) => {
         const arrow = sortColumn === index ? (asc ? " ▲" : " ▼") : "";
@@ -57,8 +54,6 @@ function render() {
     });
 
     document.getElementById("tableArea").innerHTML = `${html}</tbody></table>`;
-    const maxPage = Math.max(1, Math.ceil(displayData.length / pageSize));
-    document.getElementById("pageInfo").innerHTML = `${page} / ${maxPage}`;
 }
 
 function isNumberColumn(header) {
