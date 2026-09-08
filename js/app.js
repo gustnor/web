@@ -1,6 +1,4 @@
 const pages = [
-  { id: "all", label: "전체 ETF", html: "html/all.html", script: "js/all.js" },
-  { id: "watchlist", label: "관심 ETF", html: "html/watchlist.html", script: "js/watchlist.js" },
   { id: "etf2", label: "ETF2", html: "html/etf2.html", script: "js/etf2.js" }
 ];
 
@@ -87,7 +85,7 @@ async function discoverWatchlistPages() {
 }
 
 async function initialize() {
-  const initialPage = new URLSearchParams(window.location.search).get("page") || "all";
+  const initialPage = new URLSearchParams(window.location.search).get("page") || "etf2";
   const isWatchlistPage = initialPage.startsWith("watchlist-csv-");
 
   if (!isWatchlistPage) {

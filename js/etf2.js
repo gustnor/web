@@ -60,16 +60,23 @@ function render() {
     html += "<tr>";
 
     row.forEach((col, colIdx) => {
-      let css = isNumberColumn(headers[colIdx]) ? "number" : "text";
+      const header = headers[colIdx].replace(/^\uFEFF/, "").trim();
+      let css = isNumberColumn(header) ? "number" : "text";
+      if (header === "종목코드") {
+        css = "code";
+      }
+      if (["등락률", "3개월수익률"].includes(header)) {
+        css += ` ${Number(col) >= 0 ? "up" : "down"}`;
+      }
 
-      if (headers[colIdx] === "종목명") {
+      if (header === "종목명") {
         html += `
           <td>
             <a href="#" onclick="showDetail(event,'${row.join("|")}')">${col}</a>
           </td>
         `;
       } else {
-        html += `<td class="${css}">${formatValue(headers[colIdx], col)}</td>`;
+        html += `<td class="${css}">${formatValue(header, col)}</td>`;
       }
     });
 
@@ -100,6 +107,10 @@ function formatValue(header, value) {
     return "";
   }
 
+  if (header === "종목코드") {
+    return value.trim();
+  }
+
   const number = Number(value);
   if (Number.isNaN(number)) {
     return value;
@@ -107,10 +118,14 @@ function formatValue(header, value) {
 
   if (header === "시가총액(억)") {
     const jo = Math.floor(number / 10000);
-    const eok = number % 10000;
+    const eok = Math.floor(number % 10000);
     if (jo > 0 && eok > 0) return `${jo}조 ${eok.toLocaleString("ko-KR")}억`;
     if (jo > 0) return `${jo}조`;
     return `${number.toLocaleString("ko-KR")}억`;
+  }
+
+  if (["NAV", "거래대금"].includes(header)) {
+    return Math.floor(number).toLocaleString("ko-KR");
   }
 
   if (["3개월수익률", "등락률", "배당수익률", "총보수"].includes(header)) {
