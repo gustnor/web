@@ -38,8 +38,7 @@ function render() {
     });
     html += "</tr></thead><tbody>";
 
-    const start = (page - 1) * pageSize;
-    displayData.slice(start, start + pageSize).forEach(row => {
+    displayData.forEach(row => {
         html += "<tr>";
         row.forEach((value, index) => {
             const header = headers[index].replace(/^\uFEFF/, "");

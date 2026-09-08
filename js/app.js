@@ -1,5 +1,5 @@
 const pages = [
-  { id: "etf2", label: "ETF2", html: "html/etf2.html", script: "js/etf2.js" }
+  { id: "etf2", label: "전체 ETF", html: "html/etf2.html", script: "js/etf2.js" }
 ];
 
 const nav = document.getElementById("nav");

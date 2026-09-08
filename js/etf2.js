@@ -8,6 +8,7 @@ var pageSize = 50;
 var sortColumn = -1;
 var asc = true;
 
+document.getElementById("search").addEventListener("input", filterData);
 document.getElementById("popupClose").onclick = () => {
   document.getElementById("popup").style.display = "none";
 };
@@ -53,10 +54,7 @@ function render() {
   html += "</tr></thead>";
   html += "<tbody>";
 
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize;
-
-  displayData.slice(start, end).forEach(row => {
+  displayData.forEach(row => {
     html += "<tr>";
 
     row.forEach((col, colIdx) => {
@@ -143,8 +141,13 @@ function formatValue(header, value) {
 
 function filterData() {
   const keyword = document.getElementById("search").value.toLowerCase();
+  const nameIndex = headers.findIndex(header =>
+    header.replace(/^\uFEFF/, "").trim() === "종목명"
+  );
 
-  filtered = data.filter(row => row.some(col => String(col).toLowerCase().includes(keyword)));
+  filtered = data.filter(row =>
+    String(row[nameIndex] || "").toLowerCase().includes(keyword)
+  );
   page = 1;
   render();
 }
