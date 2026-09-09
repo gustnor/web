@@ -7,6 +7,8 @@ var pageSize = 50;
 
 var sortColumn = -1;
 var asc = true;
+var renderVersion = 0;
+var renderChunkSize = 200;
 
 document.getElementById("search").addEventListener("input", filterData);
 document.getElementById("popupClose").onclick = () => {
@@ -42,47 +44,61 @@ function parseCsv(csv) {
 
 function render() {
   const displayData = [...filtered];
+  const currentRenderVersion = ++renderVersion;
 
-  let html = "<table>";
-  html += "<thead><tr>";
+  let headerHtml = "<table><thead><tr>";
 
   headers.forEach((h, idx) => {
     const arrow = sortColumn === idx ? (asc ? " ▲" : " ▼") : "";
-    html += `<th onclick="sortTable(${idx})">${h}${arrow}</th>`;
+    headerHtml += `<th onclick="sortTable(${idx})">${h}${arrow}</th>`;
   });
 
-  html += "</tr></thead>";
-  html += "<tbody>";
+  headerHtml += "</tr></thead><tbody></tbody></table>";
+  const tableArea = document.getElementById("tableArea");
+  tableArea.innerHTML = headerHtml;
+  const tbody = tableArea.querySelector("tbody");
 
-  displayData.forEach(row => {
-    html += "<tr>";
+  function appendChunk(start) {
+    if (currentRenderVersion !== renderVersion) {
+      return;
+    }
 
-    row.forEach((col, colIdx) => {
-      const header = headers[colIdx].replace(/^\uFEFF/, "").trim();
-      let css = isNumberColumn(header) ? "number" : "text";
-      if (header === "종목코드") {
-        css = "code";
-      }
-      if (["등락률", "3개월수익률"].includes(header)) {
-        css += ` ${Number(col) >= 0 ? "up" : "down"}`;
-      }
+    const end = Math.min(start + renderChunkSize, displayData.length);
+    let rowsHtml = "";
+    for (let rowIndex = start; rowIndex < end; rowIndex++) {
+      rowsHtml += renderRow(displayData[rowIndex]);
+    }
+    tbody.insertAdjacentHTML("beforeend", rowsHtml);
 
-      if (header === "종목명") {
-        html += `
-          <td>
-            <a href="#" onclick="showDetail(event,'${row.join("|")}')">${col}</a>
-          </td>
-        `;
-      } else {
-        html += `<td class="${css}">${formatValue(header, col)}</td>`;
-      }
-    });
+    if (end < displayData.length) {
+      requestAnimationFrame(() => appendChunk(end));
+    }
+  }
 
-    html += "</tr>";
+  appendChunk(0);
+}
+
+function renderRow(row) {
+  let html = "<tr>";
+
+  row.forEach((col, colIdx) => {
+    const header = headers[colIdx].replace(/^\uFEFF/, "").trim();
+    let css = isNumberColumn(header) ? "number" : "text";
+    if (header === "종목코드") {
+      css = "code";
+    }
+    if (["등락률", "3개월수익률"].includes(header)) {
+      css += ` ${Number(col) >= 0 ? "up" : "down"}`;
+    }
+
+    if (header === "종목명") {
+      html += `<td><a href="#" onclick="showDetail(event,'${row.join("|")}')">${col}</a></td>`;
+    } else {
+      html += `<td class="${css}">${formatValue(header, col)}</td>`;
+    }
   });
 
-  html += "</tbody></table>";
-  document.getElementById("tableArea").innerHTML = html;
+  return `${html}</tr>`;
 
 }
 
